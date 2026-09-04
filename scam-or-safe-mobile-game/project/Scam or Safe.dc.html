@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#f3f2f2">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+    <rect width="200" height="200" fill="#f3f2f2"/>
+    <circle cx="100" cy="100" r="60" fill="none" stroke="#ec3013" stroke-width="8"/>
+    <path d="M100 70v35l25 15" fill="none" stroke="#ec3013" stroke-width="8" stroke-linecap="round"/>
+  </svg>
+</template>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/modernist-3151de58-1d25-43ef-a436-3d854cf43678/styles.css">
+  <style>
+    body{margin:0}
+    @keyframes jailBarDrop{from{transform:translateY(-130%)}to{transform:translateY(0)}}
+    @keyframes discoStrobe{0%{background:var(--color-accent-500)}20%{background:var(--color-neutral-900)}40%{background:var(--color-accent-700)}60%{background:var(--color-bg)}80%{background:var(--color-accent-300)}100%{background:var(--color-accent-500)}}
+    @keyframes popScale{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.1);opacity:1}100%{transform:scale(1)}}
+    @keyframes confettiFall{from{transform:translateY(-30px) rotate(0deg);opacity:1}to{transform:translateY(440px) rotate(360deg);opacity:0}}
+    @keyframes ballSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes shakeX{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(5px)}}
+  </style>
+</helmet>
+<div style="min-height: 960px; background: var(--color-neutral-200); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: 48px 20px; font-family: var(--font-body); position: absolute; left: 431px; top: -102px; width: 719px; height: 1017px">
+  <div style="text-align:center">
+    <div style="font-family:var(--font-heading);font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent-700)">Modernist · mobile game</div>
+    <h1 style="margin:4px 0 0;font-size:28px">Scam or Safe?</h1>
+  </div><x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+
+    <div style="height:100%;display:flex;flex-direction:column;padding-top:58px;background:var(--color-bg);position:relative;overflow:hidden">
+
+      <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1;display:flex;flex-direction:column;padding:0 24px 28px;overflow:auto">
+          <div style="flex:1;display:flex;flex-direction:column;gap:16px;justify-content:center">
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent)">Cybersecurity training game</div>
+            <h1 style="font-size:34px;margin:0">Scam or Safe?</h1>
+            <p style="font-size:15px;opacity:.8;margin:0">Twenty real-life moments. Read each one and decide fast — is it safe, or a scam?</p>
+            <hr class="hr" style="margin:12px 0">
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;gap:12px;align-items:flex-start">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex:none;margin-top:2px"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z" stroke="var(--color-accent)" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+                <div style="font-size:13px"><strong>Get it right</strong> — the disco lights come on.</div>
+              </div>
+              <div style="display:flex;gap:12px;align-items:flex-start">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex:none;margin-top:2px"><rect x="4" y="10" width="16" height="11" stroke="var(--color-accent)" stroke-width="1.8"></rect><path d="M8 10V7a4 4 0 018 0v3" stroke="var(--color-accent)" stroke-width="1.8"></path></svg>
+                <div style="font-size:13px"><strong>Get it wrong</strong> — you're doing time behind bars.</div>
+              </div>
+              <div style="display:flex;gap:12px;align-items:flex-start">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex:none;margin-top:2px"><circle cx="12" cy="12" r="9" stroke="var(--color-accent)" stroke-width="1.8"></circle><path d="M12 7v5l4 2" stroke="var(--color-accent)" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                <div style="font-size:13px"><strong>{{ timerLabel }} on the clock</strong> for all 20 scenarios.</div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block" style="min-height:54px;font-size:15px;margin-top:20px" onClick="{{ start }}">Start the run →</button>
+        </div><div style="flex:1;display:flex;flex-direction:column;padding:0 20px 22px;position:relative">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px">
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.05em">Q{{ qNumber }} / 20</div>
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:20px;color:{{ timeColor }}">{{ timeDisplay }}</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(20,1fr);gap:2px;height:7px;margin-bottom:18px">
+            <sc-for list="{{ cells }}" as="cell" hint-placeholder-count="20">
+              <div style="height:100%;background:{{ cell.color }}"></div>
+            </sc-for>
+          </div>
+
+          <div class="card elev-sm" style="flex: 1; padding: 22px; justify-content: center; width: 298px; height: 442px">
+            <div class="card-kicker">Scenario</div>
+            <p style="font-size:19px;line-height:1.45;font-weight:600;margin:6px 0 0;opacity:1">{{ currentQuestion.text }}</p>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px">
+            <button class="btn btn-secondary btn-block" style="min-height:56px;font-size:16px" onClick="{{ answerSafe }}" disabled="{{ locked }}">
+              Looks safe
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-left:auto"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </button>
+            <button class="btn btn-secondary btn-block" style="min-height:56px;font-size:16px" onClick="{{ answerScam }}" disabled="{{ locked }}">
+              It's a scam
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-left:auto"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </button>
+          </div>
+
+          <sc-if value="{{ showWrongOverlay }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;z-index:80;overflow:hidden;background:color-mix(in srgb, var(--color-neutral-900) 78%, transparent)">
+              <div style="position:absolute;inset:0;display:flex">
+                <div style="flex:1;background:var(--color-neutral-900);border-right:3px solid var(--color-bg);animation:jailBarDrop .45s cubic-bezier(.3,1.6,.6,1) both"></div>
+                <div style="flex:1;background:var(--color-neutral-900);border-right:3px solid var(--color-bg);animation:jailBarDrop .45s .04s cubic-bezier(.3,1.6,.6,1) both"></div>
+                <div style="flex:1;background:var(--color-neutral-900);border-right:3px solid var(--color-bg);animation:jailBarDrop .45s .08s cubic-bezier(.3,1.6,.6,1) both"></div>
+                <div style="flex:1;background:var(--color-neutral-900);border-right:3px solid var(--color-bg);animation:jailBarDrop .45s .12s cubic-bezier(.3,1.6,.6,1) both"></div>
+                <div style="flex:1;background:var(--color-neutral-900);border-right:3px solid var(--color-bg);animation:jailBarDrop .45s .16s cubic-bezier(.3,1.6,.6,1) both"></div>
+                <div style="flex:1;background:var(--color-neutral-900);border-right:3px solid var(--color-bg);animation:jailBarDrop .45s .2s cubic-bezier(.3,1.6,.6,1) both"></div>
+                <div style="flex:1;background:var(--color-neutral-900);animation:jailBarDrop .45s .24s cubic-bezier(.3,1.6,.6,1) both"></div>
+              </div>
+              <div style="position:absolute;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:0 30px;text-align:center;animation:shakeX .4s .3s both">
+                <div style="font-family:var(--font-heading);font-weight:800;font-size:34px;letter-spacing:.02em;color:var(--color-bg)">BUSTED</div>
+                <div style="width:56px;height:2px;background:var(--color-accent)"></div>
+                <sc-if value="{{ showTips }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-size:13px;color:var(--color-bg);opacity:.85;line-height:1.4">{{ currentQuestion.tip }}</div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ showCorrectOverlay }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;z-index:80;overflow:hidden;animation:discoStrobe .5s steps(1) infinite">
+              <div style="position:absolute;top:14%;left:18%;width:14px;height:14px;background:var(--color-bg);animation:confettiFall 1.1s .05s linear infinite"></div>
+              <div style="position:absolute;top:10%;left:38%;width:10px;height:10px;background:var(--color-neutral-900);animation:confettiFall 1.3s .2s linear infinite"></div>
+              <div style="position:absolute;top:16%;left:58%;width:12px;height:12px;background:var(--color-bg);animation:confettiFall 1.0s .1s linear infinite"></div>
+              <div style="position:absolute;top:8%;left:76%;width:9px;height:9px;background:var(--color-neutral-900);animation:confettiFall 1.4s .3s linear infinite"></div>
+              <div style="position:absolute;top:18%;left:88%;width:13px;height:13px;background:var(--color-bg);animation:confettiFall 1.15s .15s linear infinite"></div>
+              <div style="position:absolute;top:6%;left:8%;width:11px;height:11px;background:var(--color-neutral-900);animation:confettiFall 1.25s .25s linear infinite"></div>
+              <div style="position:absolute;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:0 30px;text-align:center">
+                <svg width="46" height="46" viewBox="0 0 24 24" fill="none" style="animation:ballSpin 1.4s linear infinite"><circle cx="12" cy="12" r="9" stroke="var(--color-bg)" stroke-width="1.6"></circle><path d="M3 12h18M12 3v18M5.5 5.5l13 13M18.5 5.5l-13 13" stroke="var(--color-bg)" stroke-width="1.2"></path></svg>
+                <div style="font-family:var(--font-heading);font-weight:800;font-size:34px;color:var(--color-bg);animation:popScale .4s both">CORRECT</div>
+                <sc-if value="{{ showTips }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-size:13px;color:var(--color-bg);opacity:.9;line-height:1.4;font-weight:600">{{ currentQuestion.tip }}</div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isPlaying }}" hint-placeholder-val="{{ false }}">
+        
+      </sc-if>
+
+      <sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;padding:0 24px 28px;justify-content:center;gap:16px;text-align:center">
+          <div style="font-family:var(--font-heading);font-weight:800;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent)">{{ resultKicker }}</div>
+          <div style="font-family:var(--font-heading);font-weight:800;font-size:64px;line-height:1">{{ score }}<span style="font-size:28px;opacity:.5">/20</span></div>
+          <div class="tag tag-accent" style="align-self:center;font-size:12px">{{ tierLabel }}</div>
+          <p style="font-size:14px;opacity:.75;margin:6px 0 0">{{ resultCopy }}</p>
+          <hr class="hr" style="margin:10px 0">
+          <button class="btn btn-primary btn-block" style="min-height:54px;font-size:15px;justify-content:center" onClick="{{ start }}">Play again</button>
+        </div>
+      </sc-if>
+
+    </div>
+  </x-import>
+  
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:480,&quot;height&quot;:980},&quot;timerSeconds&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:240,&quot;min&quot;:60,&quot;max&quot;:600,&quot;step&quot;:30,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Gameplay&quot;},&quot;hardcoreMode&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Gameplay&quot;},&quot;showTips&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Gameplay&quot;}}">
+const QUESTIONS = [
+  { text: "A text says you've won a $500 gift card — just click the link to claim it.", isScam: true, tip: "Prize texts from strangers are almost always scams." },
+  { text: "Your bank's official app asks you to confirm a purchase you actually made.", isScam: false, tip: "Confirming a real transaction in your own banking app is normal." },
+  { text: "Someone calls claiming to be tech support and asks to install remote-access software you didn't request.", isScam: true, tip: "Unsolicited remote-access requests are a classic takeover scam." },
+  { text: "You turn on two-factor authentication for your email account.", isScam: false, tip: "Two-factor authentication makes accounts much harder to break into." },
+  { text: "An email says your package is delayed and demands a small fee to release it.", isScam: true, tip: "Surprise 'release fees' for packages are a common phishing trick." },
+  { text: "You notice a small padlock icon next to a shopping site's address before entering your card number.", isScam: false, tip: "A padlock means the connection is encrypted — a good sign, not a guarantee." },
+  { text: "Your 'grandchild' calls in distress, asking you to buy gift cards to help them right now.", isScam: true, tip: "Urgent gift-card requests are one of the most common scams targeting families." },
+  { text: "You use a different, strong password for every account.", isScam: false, tip: "Unique passwords stop one leak from unlocking everything else." },
+  { text: "A caller says they're from the fraud department and asks you to read them your one-time passcode.", isScam: true, tip: "Real banks never ask you to read back a one-time code." },
+  { text: "A pop-up shouts that your computer is infected and gives a number to call immediately.", isScam: true, tip: "Scare-tactic virus pop-ups exist to get you to call a fake support line." },
+  { text: "Your phone's own settings app shows a normal software update is available.", isScam: false, tip: "Updates from your device's real settings app are safe and important." },
+  { text: "An online seller insists you can only pay them using gift cards.", isScam: true, tip: "Legitimate sellers never require payment only in gift cards." },
+  { text: "An email from a coworker's real address feels off and urgently asks for a wire transfer.", isScam: true, tip: "A hacked account can send urgent messages — verify by another channel." },
+  { text: "You lock your phone with a passcode or fingerprint.", isScam: false, tip: "A locked phone protects everything if it's lost or stolen." },
+  { text: "A message says your account will be closed in 24 hours unless you 'verify' by clicking now.", isScam: true, tip: "Manufactured urgency is a pressure tactic, not a real deadline." },
+  { text: "You check that a checkout page's address starts with https before entering payment details.", isScam: false, tip: "https means the connection is encrypted — a helpful, if imperfect, check." },
+  { text: "A new online match asks for your Social Security number to 'verify you're real.'", isScam: true, tip: "No legitimate verification needs your Social Security number." },
+  { text: "You back up your photos and files regularly.", isScam: false, tip: "Backups mean a scam or crash can't cost you your memories." },
+  { text: "A brand-new profile with no mutual friends messages you about a hot investment opportunity.", isScam: true, tip: "New profiles pushing investments are a well-known scam pattern." },
+  { text: "You get a receipt email for a purchase you actually remember making.", isScam: false, tip: "A receipt matching a purchase you made is expected, not suspicious." },
+  { text: "A caller says they're from Medicare and needs your Medicare number to send a 'new' card.", isScam: true, tip: "Medicare never cold-calls for your number — hang up and call them back directly." },
+  { text: "You get a login alert from your email provider for a sign-in from a country you've never visited.", isScam: false, tip: "The alert itself is a safety feature — but change your password immediately if the sign-in wasn't you." },
+  { text: "A QR code taped over a parking meter's real one leads to a payment site when scanned.", isScam: true, tip: "'QR-jacking' swaps a real code for a fake one — check the URL before paying." },
+  { text: "A recruiter offers you a job after one text exchange and asks you to buy your own laptop via a link they send.", isScam: true, tip: "Real employers never make new hires front equipment costs through a personal link." },
+  { text: "Your company's IT department emails a scheduled maintenance notice from the same internal address they always use.", isScam: false, tip: "A routine notice from a verified, familiar internal sender is normal — no links or urgency needed to trust it." }
+];
+
+class Component extends DCLogic {
+  state = { screen: 'intro', qIndex: 0, score: 0, timeLeft: this.props.timerSeconds ?? 300, feedback: null, locked: false, results: [] };
+
+  componentWillUnmount() { clearInterval(this._timer); }
+
+  start = () => {
+    clearInterval(this._timer);
+    this.setState({ screen: 'playing', qIndex: 0, score: 0, timeLeft: this.props.timerSeconds ?? 300, feedback: null, locked: false, results: [] });
+    this._timer = setInterval(() => {
+      this.setState(s => {
+        if (s.timeLeft <= 1) {
+          clearInterval(this._timer);
+          return { timeLeft: 0, screen: 'result' };
+        }
+        return { timeLeft: s.timeLeft - 1 };
+      });
+    }, 1000);
+  };
+
+  answer = (guessScam) => {
+    if (this.state.locked || this.state.screen !== 'playing') return;
+    const q = QUESTIONS[this.state.qIndex];
+    const correct = q.isScam === guessScam;
+    const hardcore = this.props.hardcoreMode ?? false;
+    this.setState(s => ({
+      locked: true,
+      feedback: correct ? 'correct' : 'wrong',
+      score: correct ? s.score + 1 : s.score,
+      results: [...s.results, correct]
+    }));
+    setTimeout(() => {
+      if (!correct && hardcore) {
+        clearInterval(this._timer);
+        this.setState({ screen: 'result' });
+        return;
+      }
+      const nextIndex = this.state.qIndex + 1;
+      if (nextIndex >= QUESTIONS.length) {
+        clearInterval(this._timer);
+        this.setState({ screen: 'result' });
+      } else {
+        this.setState({ qIndex: nextIndex, feedback: null, locked: false });
+      }
+    }, 1600);
+  };
+
+  renderVals() {
+    const { screen, qIndex, score, timeLeft, feedback, locked, results } = this.state;
+    const timerSeconds = this.props.timerSeconds ?? 300;
+    const mm = Math.floor(timeLeft / 60);
+    const ss = String(timeLeft % 60).padStart(2, '0');
+    const cells = QUESTIONS.map((_, i) => {
+      let color = 'var(--color-neutral-300)';
+      if (i < results.length) color = results[i] ? 'var(--color-accent)' : 'var(--color-neutral-900)';
+      return { color };
+    });
+    const finalScore = score;
+    let tierLabel = 'Watch out';
+    let resultCopy = "Scammers count on quick, distracted taps. Slow down next time and you'll spot them.";
+    if (finalScore >= 18) { tierLabel = 'Cyber sentinel'; resultCopy = 'Sharp eyes. You caught almost every trick in the book.'; }
+    else if (finalScore >= 14) { tierLabel = 'Sharp eye'; resultCopy = "Solid instincts — a few tricks still slipped past."; }
+    else if (finalScore >= 8) { tierLabel = 'Getting there'; resultCopy = 'Good start. Review the tips and run it again.'; }
+
+    return {
+      isIntro: screen === 'intro',
+      isPlaying: screen === 'playing',
+      isResult: screen === 'result',
+      showWrongOverlay: screen === 'playing' && feedback === 'wrong',
+      showCorrectOverlay: screen === 'playing' && feedback === 'correct',
+      showTips: this.props.showTips ?? true,
+      timerLabel: `${Math.round(timerSeconds / 60)} minutes`,
+      currentQuestion: QUESTIONS[qIndex],
+      qNumber: qIndex + 1,
+      timeDisplay: `${mm}:${ss}`,
+      timeColor: timeLeft <= 30 ? 'var(--color-accent)' : 'var(--color-text)',
+      cells,
+      locked,
+      score,
+      tierLabel,
+      resultCopy,
+      resultKicker: timeLeft === 0 && qIndex < QUESTIONS.length - 1 ? "Time's up" : 'Run complete',
+      start: this.start,
+      answerSafe: () => this.answer(false),
+      answerScam: () => this.answer(true)
+    };
+  }
+}
+</script>
+</body>
+</html>

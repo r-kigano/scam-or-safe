@@ -1,0 +1,9 @@
+<svg viewBox="0 0 2732 2732" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="2732" height="2732" fill="#f3f2f2"/>
+  <g transform="translate(766,560) scale(12,12)">
+    <path d="M50,8 L84,21 V50 C84,75 69,90 50,96 C31,90 16,75 16,50 V21 Z" fill="none" stroke="#ec3013" stroke-width="3.2" stroke-linejoin="round"/>
+    <path d="M38,33 C38,22 62,22 62,33 C62,42 50,42 50,53" fill="none" stroke="#2d2b2b" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="50" cy="80" r="5.5" fill="#2d2b2b"/>
+  </g>
+  <text x="1366" y="2020" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="108" letter-spacing="4" fill="#2d2b2b">SCAM OR SAFE?</text>
+</svg>

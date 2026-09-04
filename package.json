@@ -1,0 +1,21 @@
+{
+  "name": "scamorsafe",
+  "version": "1.0.0",
+  "description": "Scam or Safe? — a cybersecurity training game",
+  "scripts": {
+    "android": "npx cap open android"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/ios": "^8.5.1"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
+  }
+}

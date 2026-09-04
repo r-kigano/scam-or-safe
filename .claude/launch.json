@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "scam-or-safe-web",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\npx.cmd",
+      "runtimeArgs": ["--yes", "serve", "-l", "5522", "www"],
+      "port": 5522
+    }
+  ]
+}
