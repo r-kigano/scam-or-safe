@@ -4,6 +4,9 @@ workflows:
     max_build_duration: 60
     instance_type: mac_mini_m2
     environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.rkigano.scamorsafe
       groups:
         - appstore_credentials
       vars:
@@ -17,12 +20,6 @@ workflows:
         script: npm ci
       - name: Sync Capacitor iOS project
         script: npx cap sync ios
-      - name: Set up keychain
-        script: keychain initialize
-      - name: Set up code signing settings on Xcode project
-        script: |
-          xcode-project use-profiles \
-            --project "$XCODE_PROJECT"
       - name: Build ipa for distribution
         script: |
           xcode-project build-ipa \
