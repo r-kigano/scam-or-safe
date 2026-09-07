@@ -30,8 +30,13 @@ workflows:
             --scheme "$XCODE_SCHEME"
       - name: Decode App Store Connect private key
         script: |
+          if [ -z "$APP_STORE_CONNECT_PRIVATE_KEY_B64" ]; then
+            echo "ERROR: APP_STORE_CONNECT_PRIVATE_KEY_B64 is empty - check the environment variable is set and in the appstore_credentials group"
+            exit 1
+          fi
           mkdir -p ~/.appstoreconnect/private_keys
-          echo "$APP_STORE_CONNECT_PRIVATE_KEY_B64" | base64 --decode > ~/.appstoreconnect/private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
+          echo "$APP_STORE_CONNECT_PRIVATE_KEY_B64" | base64 -D > ~/.appstoreconnect/private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
+          echo "Decoded key size: $(wc -c < ~/.appstoreconnect/private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8) bytes"
       - name: Upload to TestFlight
         script: |
           xcrun altool --upload-app \
