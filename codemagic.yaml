@@ -34,6 +34,9 @@ workflows:
             echo "ERROR: APP_STORE_CONNECT_PRIVATE_KEY_B64 is empty - check the environment variable is set and in the appstore_credentials group"
             exit 1
           fi
+          echo "Received length: ${#APP_STORE_CONNECT_PRIVATE_KEY_B64}"
+          echo "First 15 chars: ${APP_STORE_CONNECT_PRIVATE_KEY_B64:0:15}"
+          echo "Last 15 chars: ${APP_STORE_CONNECT_PRIVATE_KEY_B64: -15}"
           mkdir -p ~/.appstoreconnect/private_keys
           echo "$APP_STORE_CONNECT_PRIVATE_KEY_B64" | base64 -D > ~/.appstoreconnect/private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8
           echo "Decoded key size: $(wc -c < ~/.appstoreconnect/private_keys/AuthKey_$APP_STORE_CONNECT_KEY_IDENTIFIER.p8) bytes"
