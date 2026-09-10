@@ -3,6 +3,12 @@
 
   const CONFIG = { timerSeconds: 420, hardcoreMode: false, showTips: true };
 
+  const DIFFICULTIES = [
+    { id: 'beginner', label: 'Beginner', sub: 'New to cybersecurity training', seconds: 600 },
+    { id: 'intermediate', label: 'Intermediate', sub: 'Had some training before', seconds: 420 },
+    { id: 'advanced', label: 'Advanced', sub: 'Very experienced', seconds: 300 }
+  ];
+
   const QUESTIONS = [
     { text: "A text says you've won a $500 gift card — just click the link to claim it.", isScam: true, tip: "Prize texts from strangers are almost always scams." },
     { text: "Your bank's official app asks you to confirm a purchase you actually made.", isScam: false, tip: "Confirming a real transaction in your own banking app is normal." },
@@ -66,6 +72,7 @@
     screen: 'intro',
     qIndex: 0,
     score: 0,
+    timerSeconds: CONFIG.timerSeconds,
     timeLeft: CONFIG.timerSeconds,
     feedback: null,
     locked: false,
@@ -74,13 +81,14 @@
 
   let timerId = null;
 
-  function start() {
+  function start(seconds) {
     clearInterval(timerId);
     Object.assign(state, {
       screen: 'playing', qIndex: 0, score: 0,
-      timeLeft: CONFIG.timerSeconds, feedback: null, locked: false, results: []
+      timerSeconds: seconds, timeLeft: seconds, feedback: null, locked: false, results: []
     });
     timerId = setInterval(() => {
+      if (state.locked) return;
       if (state.timeLeft <= 1) {
         clearInterval(timerId);
         state.timeLeft = 0;
@@ -100,27 +108,28 @@
     state.locked = true;
     state.feedback = correct ? 'correct' : 'wrong';
     if (correct) state.score += 1;
-    state.results.push(correct);
+    state.results.push({ guessScam, correct });
     render();
+  }
 
-    setTimeout(() => {
-      if (!correct && CONFIG.hardcoreMode) {
-        clearInterval(timerId);
-        state.screen = 'result';
-        render();
-        return;
-      }
-      const nextIndex = state.qIndex + 1;
-      if (nextIndex >= QUESTIONS.length) {
-        clearInterval(timerId);
-        state.screen = 'result';
-      } else {
-        state.qIndex = nextIndex;
-        state.feedback = null;
-        state.locked = false;
-      }
+  function continueNext() {
+    if (!state.locked) return;
+    if (state.feedback === 'wrong' && CONFIG.hardcoreMode) {
+      clearInterval(timerId);
+      state.screen = 'result';
       render();
-    }, 1600);
+      return;
+    }
+    const nextIndex = state.qIndex + 1;
+    if (nextIndex >= QUESTIONS.length) {
+      clearInterval(timerId);
+      state.screen = 'result';
+    } else {
+      state.qIndex = nextIndex;
+      state.feedback = null;
+      state.locked = false;
+    }
+    render();
   }
 
   function svgIcon(name) {
@@ -133,8 +142,8 @@
         return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex:none;margin-top:2px"><circle cx="12" cy="12" r="9" stroke="var(--color-accent)" stroke-width="1.8"></circle><path d="M12 7v5l4 2" stroke="var(--color-accent)" stroke-width="1.8" stroke-linecap="round"></path></svg>';
       case 'arrow':
         return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
-      case 'lock':
-        return '<svg width="46" height="46" viewBox="0 0 24 24" fill="none" class="spin-icon"><circle cx="12" cy="12" r="9" stroke="var(--color-bg)" stroke-width="1.6"></circle><path d="M3 12h18M12 3v18M5.5 5.5l13 13M18.5 5.5l-13 13" stroke="var(--color-bg)" stroke-width="1.2"></path></svg>';
+      case 'puzzle':
+        return '<svg width="46" height="46" viewBox="0 0 24 24" fill="none" class="pop-icon"><path d="M9 3.5c0-.9.9-1.5 2-1.5s2 .6 2 1.5c0 .5-.3.9-.6 1.2-.3.3-.4.6-.4 1 0 .7.6 1.3 1.3 1.3h3.2c.9 0 1.5.9 1.5 2s-.6 2-1.5 2c-.5 0-.9.3-1.2.6-.3.3-.6.4-1 .4-.7 0-1.3.6-1.3 1.3v3.2c0 .9-.9 1.5-2 1.5s-2-.6-2-1.5c0-.5.3-.9.6-1.2.3-.3.4-.6.4-1 0-.7-.6-1.3-1.3-1.3H5.5c-.9 0-1.5-.9-1.5-2s.6-2 1.5-2c.5 0 .9-.3 1.2-.6.3-.3.6-.4 1-.4.7 0 1.3-.6 1.3-1.3V3.5z" fill="var(--color-bg)"></path></svg>';
       default:
         return '';
     }
@@ -145,7 +154,6 @@
   }
 
   function renderIntro() {
-    const minutes = Math.round(CONFIG.timerSeconds / 60);
     return `
       <div class="screen intro">
         <div class="intro-body">
@@ -154,12 +162,21 @@
           <p class="lede">${QUESTIONS.length} real-life moments. Read each one and decide fast — is it safe, or a scam?</p>
           <hr class="hr">
           <div class="rules">
-            <div class="rule">${svgIcon('shield')}<div class="rule-text"><strong>Get it right</strong> — the disco lights come on.</div></div>
+            <div class="rule">${svgIcon('shield')}<div class="rule-text"><strong>Get it right</strong> — a quick celebration, then move on when you're ready.</div></div>
             <div class="rule">${svgIcon('bars')}<div class="rule-text"><strong>Get it wrong</strong> — you're doing time behind bars.</div></div>
-            <div class="rule">${svgIcon('clock')}<div class="rule-text"><strong>${minutes} minutes on the clock</strong> for all ${QUESTIONS.length} scenarios.</div></div>
+            <div class="rule">${svgIcon('clock')}<div class="rule-text"><strong>Pick your time limit</strong> below based on your experience.</div></div>
+          </div>
+          <div class="difficulty-section">
+            <div class="difficulty-label">How much cybersecurity training do you have?</div>
+            <div class="difficulty-options">
+              ${DIFFICULTIES.map(d => `
+                <button class="btn btn-secondary btn-block difficulty-btn" data-seconds="${d.seconds}">
+                  <span class="difficulty-name">${d.label}</span>
+                  <span class="difficulty-sub">${d.sub} · ${Math.round(d.seconds / 60)} min</span>
+                </button>`).join('')}
+            </div>
           </div>
         </div>
-        <button class="btn btn-primary btn-block" style="min-height:54px;font-size:15px;margin-top:20px" id="start-btn">Start the run →</button>
       </div>`;
   }
 
@@ -171,7 +188,7 @@
 
     const cells = QUESTIONS.map((_, i) => {
       let cls = 'progress-cell';
-      if (i < state.results.length) cls += state.results[i] ? ' correct' : ' wrong';
+      if (i < state.results.length) cls += state.results[i].correct ? ' correct' : ' wrong';
       return `<div class="${cls}"></div>`;
     }).join('');
 
@@ -187,6 +204,7 @@
             <div class="overlay-title">BUSTED</div>
             <div class="overlay-divider"></div>
             ${CONFIG.showTips ? `<div class="overlay-tip">${escapeHtml(q.tip)}</div>` : ''}
+            <button class="btn btn-block overlay-continue-btn" id="continue-btn">Continue ${svgIcon('arrow')}</button>
           </div>
         </div>`;
     } else if (state.feedback === 'correct') {
@@ -197,9 +215,10 @@
         <div class="overlay overlay-correct">
           ${confetti}
           <div class="overlay-content">
-            ${svgIcon('lock')}
+            ${svgIcon('puzzle')}
             <div class="overlay-title">CORRECT</div>
             ${CONFIG.showTips ? `<div class="overlay-tip">${escapeHtml(q.tip)}</div>` : ''}
+            <button class="btn btn-block overlay-continue-btn" id="continue-btn">Continue ${svgIcon('arrow')}</button>
           </div>
         </div>`;
     }
@@ -249,6 +268,40 @@
         <p class="result-copy">${resultCopy}</p>
         <hr class="hr" style="margin:10px 0">
         <button class="btn btn-primary btn-block" style="min-height:54px;font-size:15px;justify-content:center" id="again-btn">Play again</button>
+        <button class="btn btn-secondary btn-block" style="justify-content:center;margin-top:10px" id="review-btn">Review answers</button>
+      </div>`;
+  }
+
+  function renderReview() {
+    const rows = QUESTIONS.map((q, i) => {
+      const r = state.results[i];
+      if (!r) {
+        return `
+          <div class="review-item review-unreached">
+            <div class="review-q">${i + 1}. ${escapeHtml(q.text)}</div>
+            <div class="review-meta">Not reached — ran out of time</div>
+          </div>`;
+      }
+      const userLabel = r.guessScam ? "It's a scam" : 'Looks safe';
+      const correctLabel = q.isScam ? "It's a scam" : 'Looks safe';
+      return `
+        <div class="review-item ${r.correct ? 'review-correct' : 'review-wrong'}">
+          <div class="review-q">${i + 1}. ${escapeHtml(q.text)}</div>
+          <div class="review-meta">
+            <span class="review-badge">${r.correct ? 'Correct' : 'Missed'}</span>
+            You answered <strong>${userLabel}</strong> — correct answer was <strong>${correctLabel}</strong>
+          </div>
+          <div class="review-tip">${escapeHtml(q.tip)}</div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="screen review">
+        <div class="review-header">
+          <div class="review-title">Review</div>
+          <button class="btn btn-secondary" id="review-back-btn">Back</button>
+        </div>
+        <div class="review-list">${rows}</div>
       </div>`;
   }
 
@@ -256,12 +309,14 @@
     let html;
     if (state.screen === 'intro') html = renderIntro();
     else if (state.screen === 'playing') html = renderPlaying();
+    else if (state.screen === 'review') html = renderReview();
     else html = renderResult();
 
     app.innerHTML = html;
 
-    const startBtn = document.getElementById('start-btn');
-    if (startBtn) startBtn.addEventListener('click', start);
+    document.querySelectorAll('.difficulty-btn').forEach((btn) => {
+      btn.addEventListener('click', () => start(parseInt(btn.dataset.seconds, 10)));
+    });
 
     const safeBtn = document.getElementById('answer-safe');
     if (safeBtn) safeBtn.addEventListener('click', () => answer(false));
@@ -269,8 +324,17 @@
     const scamBtn = document.getElementById('answer-scam');
     if (scamBtn) scamBtn.addEventListener('click', () => answer(true));
 
+    const continueBtn = document.getElementById('continue-btn');
+    if (continueBtn) continueBtn.addEventListener('click', continueNext);
+
     const againBtn = document.getElementById('again-btn');
-    if (againBtn) againBtn.addEventListener('click', start);
+    if (againBtn) againBtn.addEventListener('click', () => { state.screen = 'intro'; render(); });
+
+    const reviewBtn = document.getElementById('review-btn');
+    if (reviewBtn) reviewBtn.addEventListener('click', () => { state.screen = 'review'; render(); });
+
+    const reviewBackBtn = document.getElementById('review-back-btn');
+    if (reviewBackBtn) reviewBackBtn.addEventListener('click', () => { state.screen = 'result'; render(); });
   }
 
   render();
