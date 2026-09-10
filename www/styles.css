@@ -18,6 +18,7 @@
   --color-accent-800: #7c1405;
 
   --color-success: #1a9d4a;
+  --color-sky: #2f8fd6;
 
   --font-heading: "Archivo", system-ui, sans-serif;
   --font-body: "Archivo", system-ui, sans-serif;
@@ -128,7 +129,6 @@ h1 { font-family: var(--font-heading); font-weight: 800; margin: 0; }
 .difficulty-options { display: flex; flex-direction: column; gap: 10px; }
 .difficulty-btn { flex-direction: column; align-items: flex-start; gap: 2px; min-height: 56px; margin-top: 0; }
 .difficulty-name { font-family: var(--font-heading); font-weight: 800; font-size: 15px; }
-.difficulty-sub { font-size: 12px; font-weight: 400; opacity: .65; }
 
 /* ── Playing screen ────────────────────────────────────────── */
 
@@ -167,19 +167,10 @@ h1 { font-family: var(--font-heading); font-weight: 800; margin: 0; }
 .overlay-title { font-family: var(--font-heading); font-weight: 800; font-size: 34px; letter-spacing: 0.02em; }
 .overlay-tip { font-size: 13px; line-height: 1.4; }
 
-.overlay-wrong {
-  background: color-mix(in srgb, var(--color-neutral-900) 78%, transparent);
-}
-.jail-bars { position: absolute; inset: 0; display: flex; }
-.jail-bar {
-  flex: 1; background: var(--color-neutral-900); border-right: 3px solid var(--color-bg);
-  animation: jailBarDrop .45s cubic-bezier(.3,1.6,.6,1) both;
-}
-.jail-bar:last-child { border-right: none; }
+.overlay-wrong { background: var(--color-sky); }
 .overlay-wrong .overlay-title, .overlay-wrong .overlay-tip { color: var(--color-bg); }
-.overlay-wrong .overlay-content { animation: shakeX .4s .3s both; }
-.overlay-wrong .overlay-tip { opacity: .85; }
-.overlay-divider { width: 56px; height: 2px; background: var(--color-accent); }
+.overlay-wrong .overlay-tip { opacity: .9; font-weight: 600; }
+.overlay-wrong .overlay-title { animation: popScale .4s both; }
 
 .overlay-correct { background: var(--color-success); }
 .overlay-correct .overlay-title, .overlay-correct .overlay-tip { color: var(--color-bg); }
@@ -193,17 +184,10 @@ h1 { font-family: var(--font-heading); font-weight: 800; margin: 0; }
   justify-content: center; margin-top: 10px;
 }
 .overlay-continue-btn:active { background: var(--color-neutral-200); }
+.overlay-auto-hint { font-size: 11px; opacity: .7; color: var(--color-bg); }
 
-@keyframes jailBarDrop { from { transform: translateY(-130%); } to { transform: translateY(0); } }
 @keyframes popScale { 0% { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); } }
 @keyframes confettiFall { from { transform: translateY(-30px) rotate(0deg); opacity: 1; } to { transform: translateY(440px) rotate(360deg); opacity: 0; } }
-@keyframes shakeX {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-9px); }
-  40% { transform: translateX(8px); }
-  60% { transform: translateX(-6px); }
-  80% { transform: translateX(5px); }
-}
 
 /* ── Result screen ─────────────────────────────────────────── */
 
