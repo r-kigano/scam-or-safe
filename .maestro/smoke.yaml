@@ -1,0 +1,45 @@
+# Smoke test of the installed Android app: launch, play two questions, finish, review.
+# Run: maestro test .maestro/smoke.yaml   (with an emulator or USB device connected)
+appId: com.rkigano.scamorsafe
+name: Scam or Safe - installed app smoke test
+---
+- launchApp:
+    clearState: true
+# On a slow emulator Android may show "isn't responding"; keep waiting rather than closing.
+- tapOn:
+    text: "Wait"
+    optional: true
+# The WebView can take a while to draw on a slow emulator. Text is a regex, so "?" is matched with "."
+- extendedWaitUntil:
+    visible: "Scam or Safe."
+    timeout: 30000
+- assertVisible: "5 minutes"
+- takeScreenshot: scamorsafe-1-intro
+
+- tapOn: "5 minutes"
+- assertVisible: "Q1 / 200"
+- assertVisible: "It's a scam"
+- takeScreenshot: scamorsafe-2-question
+
+- tapOn: "It's a scam"
+- assertVisible: "CORRECT|NOT QUITE"
+- takeScreenshot: scamorsafe-3-feedback
+- tapOn: "Continue"
+- assertVisible: "Q2 / 200"
+
+- tapOn: "Safe"
+- assertVisible: "CORRECT|NOT QUITE"
+- tapOn: "Continue"
+- assertVisible: "Q3 / 200"
+
+# Android Back button mid-game asks before quitting (MainActivity routes Back into app.js).
+- back
+- assertVisible: "Leave this game.*"
+- tapOn: "Cancel"
+- assertVisible: "Q3 / 200"
+- back
+- tapOn: "OK"
+- extendedWaitUntil:
+    visible: "Scam or Safe."
+    timeout: 30000
+- takeScreenshot: scamorsafe-4-after-back
