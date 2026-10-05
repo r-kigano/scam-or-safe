@@ -17,6 +17,10 @@ workflows:
     scripts:
       - name: Install npm dependencies
         script: npm ci
+      - name: Run automated tests (build stops here if any fail)
+        script: |
+          npx playwright install --with-deps chromium webkit
+          npm test
       - name: Sync Capacitor iOS project
         script: npx cap sync ios
       - name: Set up code signing settings on Xcode project
@@ -50,5 +54,6 @@ workflows:
             --apiKey "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
             --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID"
     artifacts:
+      - playwright-report/**
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
