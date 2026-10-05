@@ -420,7 +420,7 @@
     else if (finalScore >= Math.round(total * 0.7)) { tierLabel = 'Sharp eye'; resultCopy = 'Solid instincts — a few tricks still slipped past.'; }
     else if (finalScore >= Math.round(total * 0.4)) { tierLabel = 'Getting there'; resultCopy = 'Good start. Review the tips and run it again.'; }
 
-    const resultKicker = state.timeLeft === 0 && state.qIndex < total - 1 ? "Time's up" : 'Run complete';
+    const resultKicker = state.timeLeft === 0 ? "Time's up" : 'Run complete';
 
     return `
       <div class="screen result">

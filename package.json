@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Scam or Safe? — a cybersecurity training game",
   "scripts": {
-    "android": "npx cap open android"
+    "android": "npx cap open android",
+    "test": "playwright test",
+    "test:report": "playwright show-report"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +18,7 @@
     "@capacitor/ios": "^8.5.1"
   },
   "devDependencies": {
-    "@capacitor/assets": "^3.0.5"
+    "@capacitor/assets": "^3.0.5",
+    "@playwright/test": "^1.63.0"
   }
 }

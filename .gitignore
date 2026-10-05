@@ -35,3 +35,7 @@ ios/DerivedData/
 .DS_Store
 Thumbs.db
 *.log
+
+# Test outputs
+test-results/
+playwright-report/

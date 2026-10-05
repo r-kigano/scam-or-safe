@@ -189,6 +189,12 @@ h1 { font-family: var(--font-heading); font-weight: 800; margin: 0; }
 @keyframes popScale { 0% { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); } }
 @keyframes confettiFall { from { transform: translateY(-30px) rotate(0deg); opacity: 1; } to { transform: translateY(440px) rotate(360deg); opacity: 0; } }
 
+/* Respect the device's Reduce Motion setting: no pop-ins, no falling confetti. */
+@media (prefers-reduced-motion: reduce) {
+  .overlay-title, .pop-icon { animation: none; }
+  .confetti { display: none; }
+}
+
 /* ── Result screen ─────────────────────────────────────────── */
 
 .result {
