@@ -240,15 +240,6 @@
   let timerId = null;
   let feedbackTimerId = null;
 
-  // Back-button support: each screen past the intro gets a history entry, so Android's Back
-  // (routed into the WebView by MainActivity) lands in onBack() instead of closing the app.
-  let historyDepth = 0;
-
-  function pushHistory() {
-    history.pushState({ depth: historyDepth + 1 }, '');
-    historyDepth += 1;
-  }
-
   function quitToIntro() {
     clearInterval(timerId);
     clearTimeout(feedbackTimerId);
@@ -256,27 +247,27 @@
     render();
   }
 
-  function onBack() {
-    historyDepth = Math.max(0, historyDepth - 1);
+  // Android Back button/gesture: MainActivity calls this and closes the app only if it returns
+  // false. Returning true means the game handled Back itself (asked, or stepped back a screen).
+  window.scamOrSafeBack = function () {
     if (state.screen === 'playing') {
-      if (window.confirm('Leave this game? Your score so far will be lost.')) {
-        quitToIntro();
-      } else {
-        pushHistory();
-      }
-    } else if (state.screen === 'review') {
+      if (window.confirm('Leave this game? Your score so far will be lost.')) quitToIntro();
+      return true;
+    }
+    if (state.screen === 'review') {
       state.screen = 'result';
       render();
-    } else if (state.screen === 'result') {
+      return true;
+    }
+    if (state.screen === 'result') {
       state.screen = 'intro';
       render();
+      return true;
     }
-  }
-
-  window.addEventListener('popstate', onBack);
+    return false;
+  };
 
   function start(seconds) {
-    if (historyDepth === 0) pushHistory();
     clearInterval(timerId);
     clearTimeout(feedbackTimerId);
     Object.assign(state, {
@@ -525,19 +516,14 @@
     const continueBtn = document.getElementById('continue-btn');
     if (continueBtn) continueBtn.addEventListener('click', continueNext);
 
-    // On-screen back-style buttons step back through history too, so it stays in sync with Back.
     const againBtn = document.getElementById('again-btn');
-    if (againBtn) againBtn.addEventListener('click', () => {
-      if (historyDepth > 0) history.back(); else { state.screen = 'intro'; render(); }
-    });
+    if (againBtn) againBtn.addEventListener('click', () => { state.screen = 'intro'; render(); });
 
     const reviewBtn = document.getElementById('review-btn');
-    if (reviewBtn) reviewBtn.addEventListener('click', () => { pushHistory(); state.screen = 'review'; render(); });
+    if (reviewBtn) reviewBtn.addEventListener('click', () => { state.screen = 'review'; render(); });
 
     const reviewBackBtn = document.getElementById('review-back-btn');
-    if (reviewBackBtn) reviewBackBtn.addEventListener('click', () => {
-      if (historyDepth > 0) history.back(); else { state.screen = 'result'; render(); }
-    });
+    if (reviewBackBtn) reviewBackBtn.addEventListener('click', () => { state.screen = 'result'; render(); });
   }
 
   render();

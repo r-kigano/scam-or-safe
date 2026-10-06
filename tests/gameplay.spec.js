@@ -158,58 +158,56 @@ test('a perfect run through all questions scores full marks', async ({ page }) =
   await expect(page.locator('.result-tier')).toHaveText('Cyber sentinel');
 });
 
-test.describe('Back button (Android Back is routed into page history)', () => {
-  test('Back mid-game asks first; Cancel keeps playing', async ({ page }) => {
+test.describe('Android Back button (MainActivity calls window.scamOrSafeBack)', () => {
+  // Returns what the game tells Android: true = handled (app stays open), false = close the app.
+  const pressBack = (page) => page.evaluate(() => window.scamOrSafeBack());
+
+  test('on the start screen, Back lets Android close the app', async ({ page }) => {
+    expect(await pressBack(page)).toBe(false);
+  });
+
+  test('mid-game, Back asks first; Cancel keeps playing (and asks again next time)', async ({ page }) => {
     await startGame(page);
     await answer(page, QUESTIONS[0].isScam);
     await page.locator('#continue-btn').click();
     const dialogs = [];
-    page.once('dialog', (d) => { dialogs.push(d.message()); d.dismiss(); });
-    await page.goBack();
-    await expect.poll(() => dialogs.length).toBe(1);
+    page.on('dialog', (d) => { dialogs.push(d.message()); d.dismiss(); });
+    expect(await pressBack(page)).toBe(true);
     expect(dialogs[0]).toContain('Leave this game?');
     await expect(page.locator('.q-count')).toHaveText(`Q2 / ${QUESTIONS.length}`);
-
-    // A second Back still asks, because Cancel re-armed the history entry.
-    page.once('dialog', (d) => { dialogs.push(d.message()); d.dismiss(); });
-    await page.goBack();
-    await expect.poll(() => dialogs.length).toBe(2);
+    expect(await pressBack(page)).toBe(true);
+    expect(dialogs).toHaveLength(2);
     await expect(page.locator('.q-count')).toHaveText(`Q2 / ${QUESTIONS.length}`);
   });
 
-  test('Back mid-game then OK returns to the start screen and stops the timer', async ({ page }) => {
+  test('Back on the CORRECT / NOT QUITE screen also asks first', async ({ page }) => {
+    await startGame(page);
+    await answer(page, QUESTIONS[0].isScam);
+    const dialogs = [];
+    page.once('dialog', (d) => { dialogs.push(d.message()); d.dismiss(); });
+    expect(await pressBack(page)).toBe(true);
+    expect(dialogs).toHaveLength(1);
+    await expect(page.locator('.overlay-title')).toHaveText('CORRECT');
+  });
+
+  test('mid-game, Back then OK returns to the start screen and stops the timer', async ({ page }) => {
     await startGame(page);
     page.once('dialog', (d) => d.accept());
-    await page.goBack();
+    expect(await pressBack(page)).toBe(true);
     await expect(page.getByRole('heading', { name: 'Scam or Safe?' })).toBeVisible();
     await page.clock.runFor(10_000);
     await expect(page.getByRole('heading', { name: 'Scam or Safe?' })).toBeVisible();
+    expect(await pressBack(page)).toBe(false);
   });
 
-  test('Back from Review goes to results, then to the start screen', async ({ page }) => {
+  test('Back from Review goes to results, then to the start screen, then closes', async ({ page }) => {
     await startGame(page);
     await page.clock.runFor(301_000);
     await page.locator('#review-btn').click();
-    await expect(page.locator('.review-title')).toBeVisible();
-    await page.goBack();
+    expect(await pressBack(page)).toBe(true);
     await expect(page.locator('.result-score')).toBeVisible();
-    await page.goBack();
+    expect(await pressBack(page)).toBe(true);
     await expect(page.getByRole('heading', { name: 'Scam or Safe?' })).toBeVisible();
-  });
-
-  test('on-screen Back and Play again stay in step with the Back button', async ({ page }) => {
-    await startGame(page);
-    await page.clock.runFor(301_000);
-    await page.locator('#review-btn').click();
-    await page.locator('#review-back-btn').click();
-    await expect(page.locator('.result-score')).toBeVisible();
-    await page.locator('#again-btn').click();
-    await expect(page.getByRole('heading', { name: 'Scam or Safe?' })).toBeVisible();
-    // A fresh game behaves like the first one: Back asks before quitting.
-    await startGame(page);
-    const dialogs = [];
-    page.once('dialog', (d) => { dialogs.push(d.message()); d.dismiss(); });
-    await page.goBack();
-    await expect.poll(() => dialogs.length).toBe(1);
+    expect(await pressBack(page)).toBe(false);
   });
 });
