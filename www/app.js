@@ -240,6 +240,32 @@
   let timerId = null;
   let feedbackTimerId = null;
 
+  // Store rating prompt. Asked at most once per app launch, only after a run where the player
+  // answered at least 5 questions and got 70% or more right. Nothing is saved on the device
+  // (see the privacy policy); Apple and Google decide whether the dialog actually appears and
+  // cap how often a player sees it. Does nothing in a normal web browser.
+  const REVIEW_MIN_ANSWERED = 5;
+  const REVIEW_MIN_ACCURACY = 0.7;
+  const REVIEW_DELAY_MS = 1500;
+  let reviewAskedThisLaunch = false;
+
+  function maybeAskForReview() {
+    if (reviewAskedThisLaunch) return;
+    const answered = state.results.length;
+    const correct = state.results.filter((r) => r.correct).length;
+    if (answered < REVIEW_MIN_ANSWERED || correct / answered < REVIEW_MIN_ACCURACY) return;
+    const cap = window.Capacitor;
+    if (!cap || typeof cap.nativePromise !== 'function') return;
+    if (typeof cap.getPlatform === 'function' && cap.getPlatform() === 'web') return;
+    reviewAskedThisLaunch = true;
+    // Short pause so the player sees their score before the system dialog covers it.
+    setTimeout(() => {
+      try {
+        Promise.resolve(cap.nativePromise('InAppReview', 'requestReview', {})).catch(() => {});
+      } catch (e) { /* plugin missing: never block the game */ }
+    }, REVIEW_DELAY_MS);
+  }
+
   function quitToIntro() {
     clearInterval(timerId);
     clearTimeout(feedbackTimerId);
@@ -272,7 +298,8 @@
     clearTimeout(feedbackTimerId);
     Object.assign(state, {
       screen: 'playing', qIndex: 0, score: 0,
-      timerSeconds: seconds, timeLeft: seconds, feedback: null, locked: false, results: []
+      timerSeconds: seconds, timeLeft: seconds, feedback: null, locked: false, results: [],
+      reviewChecked: false
     });
     timerId = setInterval(() => {
       if (state.locked) return;
@@ -502,6 +529,12 @@
     else html = renderResult();
 
     app.innerHTML = html;
+
+    // First time this run's results appear (not when coming back from Review).
+    if (state.screen === 'result' && state.reviewChecked === false) {
+      state.reviewChecked = true;
+      maybeAskForReview();
+    }
 
     document.querySelectorAll('.difficulty-btn').forEach((btn) => {
       btn.addEventListener('click', () => start(parseInt(btn.dataset.seconds, 10)));
